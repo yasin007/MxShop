@@ -8,7 +8,7 @@ of only for display.
 from __future__ import unicode_literals
 
 from django.template.loader import render_to_string
-from django.urls import reverse
+from django.urls.base import reverse
 from django.db import transaction
 
 from xadmin.views import (
@@ -19,6 +19,7 @@ from xadmin.views.base import csrf_protect_m
 
 
 class SortableListPlugin(BaseAdminPlugin):
+
     list_order_field = None
 
     def init_request(self, *args, **kwargs):

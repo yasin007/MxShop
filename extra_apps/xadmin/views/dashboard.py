@@ -1,7 +1,7 @@
 from django import forms
 from django.apps import apps
 from django.core.exceptions import PermissionDenied
-from django.urls import reverse, NoReverseMatch
+from django.urls.base import reverse, NoReverseMatch
 from django.template.context_processors import csrf
 from django.db.models.base import ModelBase
 from django.forms.forms import DeclarativeFieldsMetaclass
@@ -23,7 +23,7 @@ from xadmin.sites import site
 from xadmin.views.base import CommAdminView, ModelAdminView, filter_hook, csrf_protect_m
 from xadmin.views.edit import CreateAdminView
 from xadmin.views.list import ListAdminView
-from xadmin.util import unquote, DJANGO_11
+from xadmin.util import unquote
 import copy
 
 
@@ -36,10 +36,7 @@ class WidgetTypeSelect(forms.Widget):
     def render(self, name, value, attrs=None):
         if value is None:
             value = ''
-        if DJANGO_11:
-            final_attrs = self.build_attrs(attrs, extra_attrs={'name': name})
-        else:
-            final_attrs = self.build_attrs(attrs, name=name)
+        final_attrs = self.build_attrs(attrs, extra_attrs={'name': name})
         final_attrs['class'] = 'nav nav-pills nav-stacked'
         output = [u'<ul%s>' % flatatt(final_attrs)]
         options = self.render_options(force_text(value), final_attrs['id'])
@@ -59,10 +56,10 @@ class WidgetTypeSelect(forms.Widget):
                 'javascript:$(this).parent().parent().find(\'>li\').removeClass(\'active\');$(this).parent().addClass(\'active\');' +
                 '$(\'#%s_input\').attr(\'value\', \'%s\')' % (id, widget.widget_type) +
                 '"><h4><i class="%s"></i> %s</h4><p>%s</p></a></li>') % (
-                   selected_html,
-                   widget.widget_icon,
-                   widget.widget_title or widget.widget_type,
-                   widget.description)
+                    selected_html,
+                    widget.widget_icon,
+                    widget.widget_title or widget.widget_type,
+                    widget.description)
 
     def render_options(self, selected_choice, id):
         # Normalize to strings.
@@ -73,6 +70,7 @@ class WidgetTypeSelect(forms.Widget):
 
 
 class UserWidgetAdmin(object):
+
     model_icon = 'fa fa-dashboard'
     list_display = ('widget_type', 'page_id', 'user')
     list_filter = ['user', 'widget_type', 'page_id']
@@ -83,7 +81,7 @@ class UserWidgetAdmin(object):
     wizard_form_list = (
         (_(u"Widget Type"), ('page_id', 'widget_type')),
         (_(u"Widget Params"), {'callback':
-                                   "get_widget_params_form", 'convert': "convert_widget_params"})
+                               "get_widget_params_form", 'convert': "convert_widget_params"})
     )
 
     def formfield_for_dbfield(self, db_field, **kwargs):
@@ -165,7 +163,6 @@ class WidgetManager(object):
     def get_widgets(self, page_id):
         return self._widgets.values()
 
-
 widget_manager = WidgetManager()
 
 
@@ -178,6 +175,7 @@ class WidgetDataError(Exception):
 
 
 class BaseWidget(forms.Form):
+
     template = 'xadmin/widgets/base.html'
     description = 'Base Widget, don\'t use it.'
     widget_title = None
@@ -264,6 +262,7 @@ class HtmlWidget(BaseWidget):
 
 
 class ModelChoiceIterator(object):
+
     def __init__(self, field):
         self.field = field
 
@@ -276,11 +275,11 @@ class ModelChoiceIterator(object):
 
 class ModelChoiceField(forms.ChoiceField):
 
-    def __init__(self, required=True, widget=None, label=None, initial=None,
-                 help_text=None, *args, **kwargs):
+    def __init__(self, *, required=True, widget=None, label=None, initial=None,
+                 help_text=None, **kwargs):
         # Call Field instead of ChoiceField __init__() because we don't need
         # ChoiceField.__init__().
-        forms.Field.__init__(self)
+        forms.Field.__init__(self, **kwargs)
         self.widget.choices = self.choices
 
     def __deepcopy__(self, memo):
@@ -312,6 +311,7 @@ class ModelChoiceField(forms.ChoiceField):
 
 
 class ModelBaseWidget(BaseWidget):
+
     app_label = None
     model_name = None
     model_perm = 'change'
@@ -444,7 +444,7 @@ class ListWidget(ModelBaseWidget, PartialBaseWidget):
         context['result_headers'] = [c for c in list_view.result_headers(
         ).cells if c.field_name in base_fields]
         context['results'] = [[o for i, o in
-                               enumerate(filter(lambda c: c.field_name in base_fields, r.cells))]
+                               enumerate(filter(lambda c:c.field_name in base_fields, r.cells))]
                               for r in list_view.results()]
         context['result_count'] = list_view.result_count
         context['page_url'] = self.model_admin_url('changelist') + "?" + urlencode(self.list_params)
@@ -486,6 +486,7 @@ class AddFormWidget(ModelBaseWidget, PartialBaseWidget):
 
 
 class Dashboard(CommAdminView):
+
     widget_customiz = True
     widgets = []
     title = _(u"Dashboard")
@@ -507,10 +508,10 @@ class Dashboard(CommAdminView):
             wid = widget_manager.get(widget.widget_type)
 
             class widget_with_perm(wid):
+
                 def context(self, context):
                     super(widget_with_perm, self).context(context)
                     context.update({'has_change_permission': self.request.user.has_perm('xadmin.change_userwidget')})
-
             wid_instance = widget_with_perm(self, data or widget.get_value())
             return wid_instance
         except UserWidget.DoesNotExist:
@@ -550,8 +551,7 @@ class Dashboard(CommAdminView):
                 widgets = []
 
                 if portal_pos:
-                    user_widgets = dict(
-                        [(uw.id, uw) for uw in UserWidget.objects.filter(user=self.user, page_id=self.get_page_id())])
+                    user_widgets = dict([(uw.id, uw) for uw in UserWidget.objects.filter(user=self.user, page_id=self.get_page_id())])
                     for col in portal_pos.split('|'):
                         ws = []
                         for wid in col.split(','):
@@ -580,10 +580,8 @@ class Dashboard(CommAdminView):
             'portal_key': self.get_portal_key(),
             'columns': [('col-sm-%d' % int(12 / len(self.widgets)), ws) for ws in self.widgets],
             'has_add_widget_permission': self.has_model_perm(UserWidget, 'add') and self.widget_customiz,
-            'add_widget_url': self.get_admin_url(
-                '%s_%s_add' % (UserWidget._meta.app_label, UserWidget._meta.model_name)) +
-                              "?user=%s&page_id=%s&_redirect=%s" % (
-                                  self.user.id, self.get_page_id(), urlquote(self.request.get_full_path()))
+            'add_widget_url': self.get_admin_url('%s_%s_add' % (UserWidget._meta.app_label, UserWidget._meta.model_name)) +
+            "?user=%s&page_id=%s&_redirect=%s" % (self.user.id, self.get_page_id(), urlquote(self.request.get_full_path()))
         }
         context = super(Dashboard, self).get_context()
         context.update(new_context)
@@ -607,8 +605,7 @@ class Dashboard(CommAdminView):
                         user=self.user, page_id=self.get_page_id(), id=widget_id)
                     widget.delete()
                     try:
-                        portal_pos = UserSettings.objects.get(user=self.user,
-                                                              key="dashboard:%s:pos" % self.get_page_id())
+                        portal_pos = UserSettings.objects.get(user=self.user, key="dashboard:%s:pos" % self.get_page_id())
                         pos = [[w for w in col.split(',') if w != str(
                             widget_id)] for col in portal_pos.value.split('|')]
                         portal_pos.value = '|'.join([','.join(col) for col in pos])
@@ -623,7 +620,7 @@ class Dashboard(CommAdminView):
     @filter_hook
     def get_media(self):
         media = super(Dashboard, self).get_media() + \
-                self.vendor('xadmin.page.dashboard.js', 'xadmin.page.dashboard.css')
+            self.vendor('xadmin.page.dashboard.js', 'xadmin.page.dashboard.css')
         if self.widget_customiz:
             media = media + self.vendor('xadmin.plugin.portal.js')
         for ws in self.widgets:
@@ -633,6 +630,7 @@ class Dashboard(CommAdminView):
 
 
 class ModelDashboard(Dashboard, ModelAdminView):
+
     title = _(u"%s Dashboard")
 
     def get_page_id(self):
