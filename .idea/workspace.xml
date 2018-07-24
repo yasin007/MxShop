@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7e220677-3881-461e-82c2-7d6cefe6b891" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/MxShop.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/MxShop.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MxShop/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/MxShop/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MxShop/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/MxShop/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extra_apps/xadmin/sites.py" beforeDir="false" afterPath="$PROJECT_DIR$/extra_apps/xadmin/sites.py" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/venv/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -64,20 +60,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="settings.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MxShop/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="295">
+            <state relative-caret-position="-904">
               <caret line="50" column="11" lean-forward="true" selection-start-line="50" selection-start-column="11" selection-end-line="50" selection-end-column="18" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sites.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="sites.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/extra_apps/xadmin/sites.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="409">
-              <caret line="226" column="19" lean-forward="true" selection-start-line="226" selection-start-column="19" selection-end-line="226" selection-end-column="19" />
+            <state relative-caret-position="490">
+              <caret line="281" lean-forward="true" selection-start-line="281" selection-end-line="281" />
             </state>
           </provider>
         </entry>
@@ -92,6 +88,7 @@
       <list>
         <option value="$PROJECT_DIR$/MxShop/urls.py" />
         <option value="$PROJECT_DIR$/MxShop/settings.py" />
+        <option value="$PROJECT_DIR$/extra_apps/xadmin/sites.py" />
       </list>
     </option>
   </component>
@@ -495,17 +492,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/extra_apps/xadmin/sites.py">
+    <entry file="file://$PROJECT_DIR$/MxShop/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="409">
-          <caret line="226" column="19" lean-forward="true" selection-start-line="226" selection-start-column="19" selection-end-line="226" selection-end-column="19" />
+        <state relative-caret-position="-904">
+          <caret line="50" column="11" lean-forward="true" selection-start-line="50" selection-start-column="11" selection-end-line="50" selection-end-column="18" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/MxShop/settings.py">
+    <entry file="file://$PROJECT_DIR$/extra_apps/xadmin/sites.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="295">
-          <caret line="50" column="11" lean-forward="true" selection-start-line="50" selection-start-column="11" selection-end-line="50" selection-end-column="18" />
+        <state relative-caret-position="490">
+          <caret line="281" lean-forward="true" selection-start-line="281" selection-end-line="281" />
         </state>
       </provider>
     </entry>
