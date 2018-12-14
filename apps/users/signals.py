@@ -1,0 +1,22 @@
+"""
+create by 维尼的小熊 on 2018/12/11
+
+"""
+__autor__ = 'yasin'
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
+@receiver(post_save, sender=User)
+def create_user(sender, instance=None, created=False, **kwargs):
+    """
+    通过信号量的方式设置密码
+    """
+    if created:
+        password = instance.password
+        instance.set_password(password)
+        instance.save()
