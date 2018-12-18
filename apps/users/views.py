@@ -34,7 +34,7 @@ class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
         code = self.generate_code()
         yun_pian = YunPian(APIKEY)
         sms_status = yun_pian.send_sms(mobile=mobile, code=code)
-        if sms_status['code'] == 0:
+        if sms_status['code'] != 0:
             return Response({
                 "mobile": sms_status['msg']
             }, status=status.HTTP_400_BAD_REQUEST)

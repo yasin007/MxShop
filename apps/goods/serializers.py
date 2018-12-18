@@ -4,7 +4,19 @@ create by 维尼的小熊 on 2018/12/14
 """
 __autor__ = 'yasin'
 from rest_framework import serializers
-from goods.models import Goods, GoodsCategory
+from goods.models import Goods, GoodsCategory,Banner
+
+
+
+class BannerSerializer(serializers.ModelSerializer):
+    """
+    轮播图序列化
+    """
+
+    class Meta:
+        model = Banner
+        fields = "__all__"
+
 
 
 class CategorySerializer3(serializers.ModelSerializer):

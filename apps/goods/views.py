@@ -1,5 +1,5 @@
-from .models import Goods, GoodsCategory
-from .serializers import GoodsSerializer, CategorySerializer
+from .models import Goods, GoodsCategory, Banner
+from .serializers import GoodsSerializer, CategorySerializer, BannerSerializer
 from rest_framework import mixins
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
@@ -39,3 +39,11 @@ class CategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets
     """
     queryset = GoodsCategory.objects.filter(category_type='1')
     serializer_class = CategorySerializer
+
+
+class BannerViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    轮播图列表数据
+    """
+    queryset = Banner.objects.all()
+    serializer_class = BannerSerializer
