@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework.mixins import CreateModelMixin
 from rest_framework import viewsets
-from .serializers import SmsSerializer, UserRegSerializer
+from .serializers import SmsSerializer, UserRegSerializer, UserDetailSerializer
 from MxShop.settings import APIKEY
 from utils.yunpian import YunPian
 from random import choice
@@ -9,6 +9,10 @@ from .models import VerifyCode
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
+from rest_framework import mixins
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from rest_framework import authentication
+from rest_framework import permissions
 
 User = get_user_model()
 
@@ -36,23 +40,38 @@ class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
         sms_status = yun_pian.send_sms(mobile=mobile, code=code)
         if sms_status['code'] != 0:
             return Response({
-                "mobile": sms_status['msg']
+                "mobile": [sms_status['msg']]
             }, status=status.HTTP_400_BAD_REQUEST)
         else:
-            code_record = VerifyCode(code=code, mobile=mobile)
+            code_record = VerifyCode(mobile=mobile)
             code_record.save()
             return Response({
                 "mobile": mobile
             }, status=status.HTTP_201_CREATED)
 
 
-class UserViewSet(CreateModelMixin, viewsets.GenericViewSet):
+class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
-    注册
+    用户
     """
     serializer_class = UserRegSerializer
     queryset = User.objects.all()
+    authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)
 
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return UserDetailSerializer
+        elif self.action == "create":
+            return UserRegSerializer
+        return UserDetailSerializer
+
+    # permission_classes = (permissions.IsAuthenticated, )
+    def get_permissions(self):
+        if self.action == "retrieve":
+            return [permissions.IsAuthenticated()]
+        elif self.action == "create":
+            return []
+        return []
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)

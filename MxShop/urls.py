@@ -2,7 +2,7 @@
 
 from rest_framework.routers import DefaultRouter
 from django.conf.urls import url, include
-from users.views import SmsCodeViewset, UserViewSet
+from users.views import SmsCodeViewset, UserViewset
 from goods.views import GoodsListViewSet, CategoryViewSet, BannerViewSet
 from rest_framework.authtoken import views
 from rest_framework_jwt.views import obtain_jwt_token
@@ -16,7 +16,7 @@ router = DefaultRouter()
 # 发送验证码
 router.register(r'codes', SmsCodeViewset, base_name="codes")
 # 注册
-router.register(r'users', UserViewSet, base_name='users')
+router.register(r'users', UserViewset, base_name='users')
 # 商品列表
 router.register(r'goods', GoodsListViewSet, base_name='goods')
 # 商品分类列表

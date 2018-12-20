@@ -44,6 +44,15 @@ class SmsSerializer(serializers.Serializer):
         return mobile
 
 
+class UserDetailSerializer(serializers.ModelSerializer):
+    """
+    用户详情序列化类
+    """
+    class Meta:
+        model = User
+        fields = ("name", "gender", "birthday", "mobile")
+
+
 class UserRegSerializer(serializers.ModelSerializer):
     """
     用户序列化
@@ -62,6 +71,12 @@ class UserRegSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         style={'input_type': 'password'}, help_text="密码", label="密码", write_only=True,
     )
+
+    def create(self, validated_data):
+        user = super(UserRegSerializer, self).create(validated_data=validated_data)
+        user.set_password(validated_data["password"])
+        user.save()
+        return user
 
     def validate_code(self, code):
         """
