@@ -43,7 +43,7 @@ class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
                 "mobile": [sms_status['msg']]
             }, status=status.HTTP_400_BAD_REQUEST)
         else:
-            code_record = VerifyCode(mobile=mobile)
+            code_record = VerifyCode(mobile=mobile, code=code)
             code_record.save()
             return Response({
                 "mobile": mobile
@@ -72,6 +72,7 @@ class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveMode
         elif self.action == "create":
             return []
         return []
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
