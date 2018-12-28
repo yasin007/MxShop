@@ -1,5 +1,5 @@
 from .models import Goods, GoodsCategory, Banner
-from .serializers import GoodsSerializer, CategorySerializer, BannerSerializer
+from .serializers import GoodsSerializer, CategorySerializer, BannerSerializer, IndexCategorySerializer
 from rest_framework import mixins
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
@@ -15,11 +15,10 @@ class GoodsPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet, mixins.RetrieveModelMixin):
     """
     商品列表页,分页，过滤，搜索，排序
     """
-
     queryset = Goods.objects.all()
     serializer_class = GoodsSerializer
     # 分页
@@ -47,3 +46,11 @@ class BannerViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     queryset = Banner.objects.all()
     serializer_class = BannerSerializer
+
+
+class IndexCategoryViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    首页商品分类数据
+    """
+    queryset = GoodsCategory.objects.filter(is_tab=True, name__in=["生鲜食品", "酒水饮料"])
+    serializer_class = IndexCategorySerializer

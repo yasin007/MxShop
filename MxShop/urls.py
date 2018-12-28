@@ -3,7 +3,7 @@
 from rest_framework.routers import DefaultRouter
 from django.conf.urls import url, include
 from users.views import SmsCodeViewset, UserViewset
-from goods.views import GoodsListViewSet, CategoryViewSet, BannerViewSet
+from goods.views import GoodsListViewSet, CategoryViewSet, BannerViewSet, IndexCategoryViewSet
 from rest_framework.authtoken import views
 from rest_framework_jwt.views import obtain_jwt_token
 from rest_framework.documentation import include_docs_urls
@@ -23,6 +23,8 @@ router.register(r'goods', GoodsListViewSet, base_name='goods')
 router.register(r'categorys', CategoryViewSet, base_name='categorys')
 # 轮播图列表
 router.register(r'banners', BannerViewSet, base_name='banners')
+# 首页商品系列数据
+router.register(r'indexgoods', IndexCategoryViewSet, base_name="indexgoods")
 
 urlpatterns = [
     # 全局引入router
